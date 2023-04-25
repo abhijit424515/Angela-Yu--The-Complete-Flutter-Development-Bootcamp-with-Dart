@@ -1,23 +1,35 @@
 import "package:flutter/foundation.dart";
+import 'package:realm/realm.dart';
 import 'package:todoey/models/task.dart';
 
 class TaskData extends ChangeNotifier {
-  List<Task> tasks = [
-    Task(title: "Hi there"),
-  ];
+  late Realm realm;
+  late RealmResults<Task> tasks;
+
+  TaskData() {
+    final config = Configuration.local([Task.schema]);
+    realm = Realm(config);
+    tasks = realm.all<Task>();
+  }
 
   void addTask(String title) {
-    tasks.add(Task(title: title));
+    realm.write(() {
+      realm.add(Task(title: title));
+    });
     notifyListeners();
   }
 
   void toggleTaskStatus(int index) {
-    tasks[index].flip();
+    realm.write(() {
+      tasks[index].checked = !tasks[index].checked;
+    });
     notifyListeners();
   }
 
   void deleteTask(int index) {
-    tasks.remove(tasks[index]);
+    realm.write(() {
+      realm.delete(tasks[index]);
+    });
     notifyListeners();
   }
 }
