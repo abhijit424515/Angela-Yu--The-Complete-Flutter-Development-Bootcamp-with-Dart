@@ -6,8 +6,6 @@ class _Task {
   String title = "";
   bool checked = false;
 
-  // _Task({required this.title});
-
   void flip() {
     checked = !checked;
   }

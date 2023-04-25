@@ -19,6 +19,13 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addTaskAsObject(Task task) {
+    realm.write(() {
+      realm.add(task);
+    });
+    notifyListeners();
+  }
+
   void toggleTaskStatus(int index) {
     realm.write(() {
       tasks[index].checked = !tasks[index].checked;
